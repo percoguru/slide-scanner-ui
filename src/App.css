@@ -7,12 +7,6 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -28,11 +22,59 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  width:1500px;
+  height:500px;
+  padding: 50px;
 }
+
+.inputTag {
+  padding: 10px;
+}
+
+img {
+  width:100%;
+  height:100%;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 25%;
+  padding: 0px;
+  height: 10px;
+}
+
+.skipped {
+  flex: 25%;
+  padding: 0px;
+  height: 10px;
+  border-width: 1px;
+  background-color: #61dafb;
+  border-color: #61dafb;
+  border-style: solid;
+}
+
+.captured {
+  flex: 25%;
+  padding: 0px;
+  height: 10px;
+  background-color: #61dafb;
+  border-width: 1px;
+  border-color: #282c34;
+  border-style: solid;
+}
+
+
+.focused {
+  flex: 25%;
+  padding: 0px;
+  height: 10px;
+  background-color: #61dafb;
+  border-width: 1px;
+  border-color: #282c34;
+  border-style: dotted;
+}
+
