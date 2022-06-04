@@ -36,7 +36,7 @@ function CreateGrid() {
         .then(function () {
           // always executed
         });
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(intervalId);
   });
@@ -73,7 +73,12 @@ function CreateGrid() {
 const checkMoveLegal = (currentPos, direction) => {
   const newLocation = calcuateNextLoc(currentPos, direction);
 
-  if (newLocation[0] >= 0 && newLocation[1] >= 0) {
+  if (
+    newLocation[0] >= 0 &&
+    newLocation[1] >= 0 &&
+    newLocation[0] < HEIGHT &&
+    newLocation[1] < WIDTH
+  ) {
     return true;
   }
   return false;
@@ -90,18 +95,26 @@ function App() {
     const currentPos = path[path.length - 1].split("-");
     if (checkMoveLegal(currentPos, "up")) {
       setUpActive(true);
+    } else {
+      setUpActive(false);
     }
 
     if (checkMoveLegal(currentPos, "down")) {
       setDownActive(true);
+    } else {
+      setDownActive(false);
     }
 
     if (checkMoveLegal(currentPos, "right")) {
       setRightActive(true);
+    } else {
+      setRightActive(false);
     }
 
     if (checkMoveLegal(currentPos, "left")) {
       setLeftActive(true);
+    } else {
+      setLeftActive(false);
     }
   }, [path]);
 
@@ -110,7 +123,12 @@ function App() {
 
     const newLocation = calcuateNextLoc(latestLocation, direction);
 
-    if (newLocation[0] >= 0 && newLocation[1] >= 0) {
+    if (
+      newLocation[0] >= 0 &&
+      newLocation[1] >= 0 &&
+      newLocation[0] < HEIGHT &&
+      newLocation[1] < WIDTH
+    ) {
       axios
         .post("http://localhost:2000/key-stroke", {
           direction,
