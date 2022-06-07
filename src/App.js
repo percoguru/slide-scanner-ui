@@ -19,8 +19,24 @@ const calcuateNextLoc = (currentPos, move) => {
   ];
 };
 
-function CreateGrid() {
+function CreateGrid(props) {
   const [locations, setLocations] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:2000/location")
+      .then(function (response) {
+        console.log(response.data);
+        setLocations(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  }, [props.path.length]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -50,6 +66,7 @@ function CreateGrid() {
             .fill(1)
             .map((a, j) => {
               const key = `${i}-${j}`;
+
               if (locations[key]) {
                 switch (locations[key].state) {
                   case "skipped":
@@ -61,6 +78,8 @@ function CreateGrid() {
                   default:
                     return <div className="skipped" key={key}></div>;
                 }
+              } else if (locations[key] === null) {
+                return <div className="skipped" key={key}></div>;
               } else {
                 return <div className="column" key={key}></div>;
               }
@@ -70,53 +89,53 @@ function CreateGrid() {
     });
 }
 
-const checkMoveLegal = (currentPos, direction) => {
-  const newLocation = calcuateNextLoc(currentPos, direction);
+// const checkMoveLegal = (currentPos, direction) => {
+//   const newLocation = calcuateNextLoc(currentPos, direction);
 
-  if (
-    newLocation[0] >= 0 &&
-    newLocation[1] >= 0 &&
-    newLocation[0] < HEIGHT &&
-    newLocation[1] < WIDTH
-  ) {
-    return true;
-  }
-  return false;
-};
+//   if (
+//     newLocation[0] >= 0 &&
+//     newLocation[1] >= 0 &&
+//     newLocation[0] < HEIGHT &&
+//     newLocation[1] < WIDTH
+//   ) {
+//     return true;
+//   }
+//   return false;
+// };
 
 function App() {
   const [path, setPath] = useState(["0-0"]);
-  const [upActive, setUpActive] = useState(false);
-  const [downActive, setDownActive] = useState(false);
-  const [rightActive, setRightActive] = useState(false);
-  const [leftActive, setLeftActive] = useState(false);
+  // const [upActive, setUpActive] = useState(false);
+  // const [downActive, setDownActive] = useState(false);
+  // const [rightActive, setRightActive] = useState(false);
+  // const [leftActive, setLeftActive] = useState(false);
 
-  useEffect(() => {
-    const currentPos = path[path.length - 1].split("-");
-    if (checkMoveLegal(currentPos, "up")) {
-      setUpActive(true);
-    } else {
-      setUpActive(false);
-    }
+  // useEffect(() => {
+  //   const currentPos = path[path.length - 1].split("-");
+  //   if (checkMoveLegal(currentPos, "up")) {
+  //     setUpActive(true);
+  //   } else {
+  //     setUpActive(false);
+  //   }
 
-    if (checkMoveLegal(currentPos, "down")) {
-      setDownActive(true);
-    } else {
-      setDownActive(false);
-    }
+  //   if (checkMoveLegal(currentPos, "down")) {
+  //     setDownActive(true);
+  //   } else {
+  //     setDownActive(false);
+  //   }
 
-    if (checkMoveLegal(currentPos, "right")) {
-      setRightActive(true);
-    } else {
-      setRightActive(false);
-    }
+  //   if (checkMoveLegal(currentPos, "right")) {
+  //     setRightActive(true);
+  //   } else {
+  //     setRightActive(false);
+  //   }
 
-    if (checkMoveLegal(currentPos, "left")) {
-      setLeftActive(true);
-    } else {
-      setLeftActive(false);
-    }
-  }, [path]);
+  //   if (checkMoveLegal(currentPos, "left")) {
+  //     setLeftActive(true);
+  //   } else {
+  //     setLeftActive(false);
+  //   }
+  // }, [path]);
 
   function moveCamera(direction) {
     const latestLocation = path[path.length - 1].split("-");
@@ -146,12 +165,31 @@ function App() {
     }
   }
 
+  function keyDownHandler(event) {
+    if (event.code === "ArrowUp") {
+      moveCamera("up");
+    }
+
+    if (event.code === "ArrowDown") {
+      console.log(1, path);
+      moveCamera("down");
+    }
+
+    if (event.code === "ArrowLeft") {
+      moveCamera("left");
+    }
+
+    if (event.code === "ArrowRight") {
+      moveCamera("right");
+    }
+  }
+
   return (
-    <div className="App">
+    <div className="App" onKeyDown={keyDownHandler} tabIndex={0}>
       <div className="container">
-        <CreateGrid />
+        <CreateGrid path={path} />
       </div>
-      <div className="container">
+      {/* <div className="container">
         <button disabled={!upActive} onClick={() => moveCamera("up")}>
           Up
         </button>
@@ -164,7 +202,7 @@ function App() {
         <button disabled={!rightActive} onClick={() => moveCamera("right")}>
           Right
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

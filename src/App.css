@@ -44,7 +44,10 @@ img {
 .column {
   flex: 25%;
   padding: 0px;
-  height: 10px;
+  height: 10px; 
+  border-width: 1px;
+  border-color: #61dafb;
+  border-style: solid;
 }
 
 .skipped {
